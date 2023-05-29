@@ -1,0 +1,62 @@
+// Fonts
+@import url('https://fonts.bunny.net/css?family=Nunito');
+
+// cairo font
+
+
+  @import url('https://fonts.googleapis.com/css2?family=Tajawal&display=swap');
+
+// Variables
+@import 'variables';
+
+// Bootstrap
+@import 'bootstrap/scss/bootstrap';
+$primary-color:#8299FF;
+$secondary-color:#EC3188;
+$third-color:#EED641;
+
+
+body{
+            font-family: 'Tajawal', sans-serif;
+            font-size: 16pt;
+}
+.primary-bg-color{
+  background-color: $primary-color;
+
+}
+.grey-bg-color{
+  background-color:#eee;
+}
+.tab:hover{
+  color: $third-color !important;
+  // background-color: $secondary-color;
+  
+}
+.tab:active {
+  color: $secondary-color;
+}
+// 
+
+.tab-navigation ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.tab-navigation li {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.tab-navigation li a {
+  text-decoration: none;
+  padding: 5px 10px;
+}
+
+.tab-navigation li.active a {
+  background-color: #ccc;
+  color: #000;
+}
+.actions-btn{
+  width: 100% !important;
+}
