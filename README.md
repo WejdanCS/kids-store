@@ -26,5 +26,9 @@
    - Get invoice for specific order
  ### Screens
  - #### Login Screen
-
+ - #### Register Screen
  - #### Home Screen
+ - #### Orders Screen
+ - #### Favorites Screen
+ - #### User Profile Screen
+ 
