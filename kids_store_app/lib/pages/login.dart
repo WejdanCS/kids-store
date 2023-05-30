@@ -3,9 +3,12 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:kids_store_app/api/login_user.dart';
+import 'package:kids_store_app/models/login_model.dart';
 import 'package:kids_store_app/pages/home_page.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:kids_store_app/pages/register.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../utlis/constants.dart';
 
@@ -19,11 +22,13 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    emailController.text = "wejdanaljadani@gmail.com";
+    // emailController.text = "wejdanaljadani@gmail.com";
     passwordController.text = "12345678";
   }
 
@@ -58,6 +63,7 @@ class _LoginPageState extends State<LoginPage> {
                   padding:
                       EdgeInsets.symmetric(horizontal: screenSize.width * 0.06),
                   child: Form(
+                    key: _formKey,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -67,6 +73,16 @@ class _LoginPageState extends State<LoginPage> {
                         ),
 
                         TextFormField(
+                          validator: (value) {
+                            final RegExp validEmail = RegExp(
+                                r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+                            if (value == null || value == "") {
+                              return "يجب ادخال البريد الالكتروني";
+                            } else if (!validEmail.hasMatch(value)) {
+                              return "يجب ادخال بريد صحيح";
+                            }
+                            return null;
+                          },
                           decoration: InputDecoration(
                             labelText: "ادخل البريد الالكتروني",
                             helperText: "user@gmail.com",
@@ -105,6 +121,15 @@ class _LoginPageState extends State<LoginPage> {
                           height: screenSize.height * 0.02,
                         ),
                         TextFormField(
+                          validator: (value) {
+                            if (value == null || value == "") {
+                              return "يجب ادخال كلمة المرور";
+                            } else if (value.length < 6) {
+                              return "يجب أن لاتقل كلمة المرور عن 6 أحرف";
+                            } else {
+                              return null;
+                            }
+                          },
                           decoration: InputDecoration(
                             labelText: "ادخل كلمة المرور",
                             // helperText: "user@gmail.com",
@@ -129,7 +154,7 @@ class _LoginPageState extends State<LoginPage> {
                                   color: Constants.primaryColor, width: 1.2),
                             ),
                             prefixIcon: const Icon(
-                              Icons.visibility_off,
+                              Icons.enhanced_encryption,
                               color: Constants.primaryColor,
                             ),
                             labelStyle:
@@ -166,31 +191,53 @@ class _LoginPageState extends State<LoginPage> {
                               borderRadius: BorderRadius.circular(8.0),
                             ))),
                             onPressed: () async {
-                              try {
-                                await EasyLoading.show(
-                                    status: "جاري تسجيل الدخول");
-                                await login(
-                                    email: emailController.text,
-                                    password: passwordController.text);
-                                await EasyLoading.dismiss();
-                                Fluttertoast.showToast(
-                                    msg: "تم تسجيل الدخول",
-                                    toastLength: Toast.LENGTH_SHORT,
-                                    gravity: ToastGravity.CENTER,
-                                    timeInSecForIosWeb: 1,
-                                    backgroundColor: Constants.primaryColor,
-                                    textColor: Colors.white,
-                                    fontSize: 16.0);
-
-                                await Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (BuildContext context) =>
-                                        HomePage(),
-                                  ),
-                                );
-                              } catch (err) {
-                                print("Error:${err}");
+                              _formKey.currentState?.save();
+                              if (_formKey.currentState!.validate()) {
+                                try {
+                                  await EasyLoading.show(
+                                      status: "جاري تسجيل الدخول");
+                                  LoginRespone? loginRespone = await login(
+                                      email: emailController.text,
+                                      password: passwordController.text);
+                                  await EasyLoading.dismiss();
+                                  if (loginRespone != null &&
+                                      loginRespone.success == true) {
+                                    Fluttertoast.showToast(
+                                        msg: "تم تسجيل الدخول",
+                                        toastLength: Toast.LENGTH_SHORT,
+                                        gravity: ToastGravity.CENTER,
+                                        timeInSecForIosWeb: 1,
+                                        backgroundColor: Constants.primaryColor,
+                                        textColor: Colors.white,
+                                        fontSize: 16.0);
+                                    SharedPreferences prefs =
+                                        await SharedPreferences.getInstance();
+                                    prefs.setBool("isLoggedIn", true);
+                                    prefs.setString(
+                                        "token", loginRespone.token!);
+                                    await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (BuildContext context) =>
+                                            HomePage(),
+                                      ),
+                                    );
+                                  } else {
+                                    Fluttertoast.showToast(
+                                        msg: loginRespone!.message!,
+                                        toastLength: Toast.LENGTH_SHORT,
+                                        gravity: ToastGravity.CENTER,
+                                        timeInSecForIosWeb: 1,
+                                        backgroundColor: Constants.primaryColor,
+                                        textColor: Colors.white,
+                                        fontSize: 16.0);
+                                  }
+                                } catch (err) {
+                                  print("Error:${err}");
+                                  await EasyLoading.dismiss();
+                                }
+                              } else {
+                                print("not valid");
                               }
                             },
                             child: const Text(
@@ -202,7 +249,15 @@ class _LoginPageState extends State<LoginPage> {
                           children: [
                             Text("ليس لديك حساب؟"),
                             TextButton(
-                                onPressed: () {}, child: Text("إنشاء حساب"))
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (BuildContext context) =>
+                                            const RegisterPage()),
+                                  );
+                                },
+                                child: Text("إنشاء حساب"))
                           ],
                         )
                       ],
