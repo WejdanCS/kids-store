@@ -9,17 +9,7 @@ class CartModel extends ChangeNotifier {
   double _totalPrice = 0;
 
   void add(ProductCart product) {
-    // int productIndex = _items.indexWhere((element) {
-    //   return element.product!.id == product.product!.id;
-    // });
-    // print("productIndex:${productIndex}");
-    // if (productIndex != -1) {
-    //   _items[productIndex].quantity =
-    //       _items[productIndex].quantity! + product.quantity!;
-    // } else {
     _items.add(product);
-    // }
-
     notifyListeners();
   }
 
@@ -34,7 +24,6 @@ class CartModel extends ChangeNotifier {
   }
 
   List<ProductCart> getProducts() {
-    // _items.clear();
     return _items;
     // notifyListeners();
   }

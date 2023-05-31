@@ -7,6 +7,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:kids_store_app/pages/register.dart';
 import 'package:kids_store_app/providers/add_to_cart_provider.dart';
+import 'package:kids_store_app/providers/favorites_provder.dart';
 import 'package:kids_store_app/providers/products_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
@@ -21,6 +22,7 @@ void main() async {
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (context) => CartModel()),
     ChangeNotifierProvider(create: (context) => ProductsProvider()),
+    ChangeNotifierProvider(create: (context) => FavoritesProvider()),
   ], child: MyApp()));
 }
 

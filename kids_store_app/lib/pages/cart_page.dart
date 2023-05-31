@@ -44,97 +44,105 @@ class _CartPageState extends State<CartPage> {
                           itemCount: cart.getProducts().length,
                           itemBuilder: (context, i) {
                             products.getProducts();
-                            return Card(
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Column(
-                                      children: [
-                                        Text(cart
-                                            .getProducts()[i]
-                                            .product!
-                                            .name!),
-                                        Row(
-                                          children: [
-                                            Text(
-                                                "${cart.getProducts()[i].quantity} * "
-                                                " ${cart.getProducts()[i].product!.price!}ريال"),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                    Container(
-                                      height: screenSize.height * 0.06,
-                                      // width: screenSize.width * 0.3,
-                                      decoration: BoxDecoration(
-                                          color: Colors.grey.shade300,
-                                          borderRadius:
-                                              BorderRadius.circular(8)),
-                                      child: Row(children: [
-                                        IconButton(
-                                            onPressed: () {
-                                              if (cart
-                                                      .getProducts()[i]
-                                                      .quantity! <
-                                                  cart
-                                                      .getProducts()[i]
-                                                      .product!
-                                                      .quantity!) {
-                                                cart.addQty(i, 1);
-                                                //   setState(() {
-                                                //     qty = qty + 1;
-                                                //   });
-                                              } else {
-                                                Fluttertoast.showToast(
-                                                    msg: "الكمية غير متوفرة",
-                                                    toastLength:
-                                                        Toast.LENGTH_SHORT,
-                                                    gravity:
-                                                        ToastGravity.CENTER,
-                                                    timeInSecForIosWeb: 1,
-                                                    backgroundColor:
-                                                        Constants.primaryColor,
-                                                    textColor: Colors.white,
-                                                    fontSize: 16.0);
-                                              }
-                                            },
-                                            icon: Icon(
-                                              Icons.add,
-                                              size: 16,
-                                            )),
-                                        Text(
-                                            "${cart.getProducts()[i].quantity}"),
-                                        IconButton(
-                                            onPressed: () {
-                                              if (cart
-                                                      .getProducts()[i]
-                                                      .quantity! >
-                                                  1) {
-                                                cart.deleteQty(i, 1);
-                                                //   setState(() {
-                                                //     qty = qty - 1;
-                                                //   });
-                                              }
-                                            },
-                                            icon: Icon(
-                                              Icons.remove,
-                                              size: 16,
-                                            )),
-                                      ]),
-                                    ),
-                                    IconButton(
-                                        onPressed: () {
-                                          cart.removeProduct(
-                                              cart.getProducts()[i]);
-                                        },
-                                        icon: Icon(
-                                          Icons.delete,
-                                          color: Colors.red,
-                                        ))
-                                  ],
+                            return Dismissible(
+                              // Specify the direction to swipe and delete
+                              direction: DismissDirection.endToStart,
+                              key: UniqueKey(),
+                              background: Container(color: Colors.red),
+                              onDismissed: (direction) {
+                                cart.removeProduct(cart.getProducts()[i]);
+                                Fluttertoast.showToast(
+                                    msg: "تم حذف المنتج من السلة",
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    gravity: ToastGravity.CENTER,
+                                    timeInSecForIosWeb: 1,
+                                    backgroundColor: Constants.primaryColor,
+                                    textColor: Colors.white,
+                                    fontSize: 16.0);
+                              },
+                              child: Card(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Column(
+                                        children: [
+                                          Text(cart
+                                              .getProducts()[i]
+                                              .product!
+                                              .name!),
+                                          Row(
+                                            children: [
+                                              Text(
+                                                  "${cart.getProducts()[i].quantity} * "
+                                                  " ${cart.getProducts()[i].product!.price!}ريال"),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                      Container(
+                                        height: screenSize.height * 0.06,
+                                        // width: screenSize.width * 0.3,
+                                        decoration: BoxDecoration(
+                                            color: Colors.grey.shade300,
+                                            borderRadius:
+                                                BorderRadius.circular(8)),
+                                        child: Row(children: [
+                                          IconButton(
+                                              onPressed: () {
+                                                if (cart
+                                                        .getProducts()[i]
+                                                        .quantity! <
+                                                    cart
+                                                        .getProducts()[i]
+                                                        .product!
+                                                        .quantity!) {
+                                                  cart.addQty(i, 1);
+                                                  //   setState(() {
+                                                  //     qty = qty + 1;
+                                                  //   });
+                                                } else {
+                                                  Fluttertoast.showToast(
+                                                      msg: "الكمية غير متوفرة",
+                                                      toastLength:
+                                                          Toast.LENGTH_SHORT,
+                                                      gravity:
+                                                          ToastGravity.CENTER,
+                                                      timeInSecForIosWeb: 1,
+                                                      backgroundColor: Constants
+                                                          .primaryColor,
+                                                      textColor: Colors.white,
+                                                      fontSize: 16.0);
+                                                }
+                                              },
+                                              icon: Icon(
+                                                Icons.add,
+                                                size: 16,
+                                              )),
+                                          Text(
+                                              "${cart.getProducts()[i].quantity}"),
+                                          IconButton(
+                                              onPressed: () {
+                                                if (cart
+                                                        .getProducts()[i]
+                                                        .quantity! >
+                                                    1) {
+                                                  cart.deleteQty(i, 1);
+                                                  //   setState(() {
+                                                  //     qty = qty - 1;
+                                                  //   });
+                                                }
+                                              },
+                                              icon: Icon(
+                                                Icons.remove,
+                                                size: 16,
+                                              )),
+                                        ]),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             );
