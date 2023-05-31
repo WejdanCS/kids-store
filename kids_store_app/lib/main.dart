@@ -1,18 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:kids_store_app/pages/home_page.dart';
 import 'package:kids_store_app/pages/login.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:kids_store_app/pages/register.dart';
+import 'package:kids_store_app/providers/add_to_cart_provider.dart';
+import 'package:kids_store_app/providers/products_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:provider/provider.dart';
 import 'utlis/constants.dart';
 
 void main() async {
   await dotenv.load(fileName: ".env");
-
-  runApp(const MyApp());
+  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+    systemNavigationBarColor: Constants.primaryColor, // navigation bar color
+    statusBarColor: Constants.primaryColor, // status bar color
+  ));
+  runApp(MultiProvider(providers: [
+    ChangeNotifierProvider(create: (context) => CartModel()),
+    ChangeNotifierProvider(create: (context) => ProductsProvider()),
+  ], child: MyApp()));
 }
 
 class MyApp extends StatefulWidget {

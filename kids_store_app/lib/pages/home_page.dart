@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:kids_store_app/pages/favorite_page.dart';
 import 'package:kids_store_app/pages/home_products.dart';
-import 'package:kids_store_app/pages/orders_page.dart';
+import 'package:kids_store_app/pages/cart_page.dart';
 import 'package:kids_store_app/pages/profile_page.dart';
 import 'package:kids_store_app/utlis/constants.dart';
 
@@ -41,8 +41,8 @@ class _HomePageState extends State<HomePage> {
             icon: Icon(Icons.home),
           ),
           BottomNavigationBarItem(
-            label: 'الطلبات',
-            icon: Icon(Icons.shopping_basket),
+            label: 'السلة',
+            icon: Icon(Icons.shopping_cart),
           ),
           BottomNavigationBarItem(
             label: 'المفضلة',
@@ -60,7 +60,7 @@ class _HomePageState extends State<HomePage> {
               child: _currentIndex == 0
                   ? HomeProducts()
                   : _currentIndex == 1
-                      ? OrdersPage()
+                      ? CartPage()
                       : _currentIndex == 2
                           ? FavoritePage()
                           : ProfilePage())),
