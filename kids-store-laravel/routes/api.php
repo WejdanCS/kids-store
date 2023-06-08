@@ -22,18 +22,18 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 // products route
-Route::get("products/",[ProductApiController::class,"index"])->name("products");
-Route::get("products/{product}",[ProductApiController::class,"show"])->name("product");
+Route::middleware('auth:sanctum')->get("products/",[ProductApiController::class,"index"])->name("products");
+Route::middleware('auth:sanctum')->get("products/{product}",[ProductApiController::class,"show"])->name("product");
 //get All categories
-Route::get("categories/",[CategoryApiController::class,"index"])->name("categories");
+Route::middleware('auth:sanctum')->get("categories/",[CategoryApiController::class,"index"])->name("categories");
 
 // user route
 Route::post("register/",[UserApiController::class,"register"])->name("register");
 Route::post("login/",[UserApiController::class,"login"])->name("login");
 
 // order
-Route::post("orders/create",[OrderApiController::class,"create"])->name("orders.create")->middleware("auth:sanctum");
-Route::get("orders/invoice",[OrderApiController::class,"invoice"])->name("orders.invoice")->middleware("auth:sanctum");
+Route::middleware('auth:sanctum')->post("orders/create",[OrderApiController::class,"create"])->name("orders.create")->middleware("auth:sanctum");
+Route::middleware('auth:sanctum')->get("orders/invoice",[OrderApiController::class,"invoice"])->name("orders.invoice")->middleware("auth:sanctum");
 
 // 
 

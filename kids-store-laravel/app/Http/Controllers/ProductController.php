@@ -128,6 +128,6 @@ class ProductController extends Controller
         }
     
         $product->delete();
-        return redirect("showProducts")->with('success', 'تم حذف المنتج بنجاح');
+        return redirect("admin/showProducts")->with('success', 'تم حذف المنتج بنجاح');
     }
 }
