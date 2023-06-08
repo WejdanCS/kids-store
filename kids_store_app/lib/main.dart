@@ -9,6 +9,7 @@ import 'package:kids_store_app/pages/register.dart';
 import 'package:kids_store_app/providers/add_to_cart_provider.dart';
 import 'package:kids_store_app/providers/favorites_provder.dart';
 import 'package:kids_store_app/providers/products_provider.dart';
+import 'package:kids_store_app/providers/user_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 import 'utlis/constants.dart';
@@ -20,9 +21,10 @@ void main() async {
     statusBarColor: Constants.primaryColor, // status bar color
   ));
   runApp(MultiProvider(providers: [
+    ChangeNotifierProvider(create: (context) => UserProvider()),
     ChangeNotifierProvider(create: (context) => CartModel()),
     ChangeNotifierProvider(create: (context) => ProductsProvider()),
-    ChangeNotifierProvider(create: (context) => FavoritesProvider()),
+    ChangeNotifierProvider(create: (context) => FavoritesProvider())
   ], child: MyApp()));
 }
 
@@ -45,6 +47,12 @@ class _MyAppState extends State<MyApp> {
       setState(() {
         isLoading = false;
       });
+      if (isUserLoggedIn()) {
+        String? token = prefs!.getString('token');
+        if (token != null) {
+          Provider.of<UserProvider>(context, listen: false).addToken(token);
+        }
+      } else {}
     });
   }
 
